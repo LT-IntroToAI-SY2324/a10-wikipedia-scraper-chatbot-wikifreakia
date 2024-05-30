@@ -120,7 +120,7 @@ def get_draft_pick(name: str) -> str:
     Returns:
         pick number of the given person
     """
-    infobox_text = clean_text(get_first_infobox_text(get_page_html(name)))
+    infobox_text = clean_text(get_first_infobox_text(get_page_html(name))
     pattern = r"(?:NHL draft\D*)(?P<draft>\d{4})"
     error_text = (
         "Page infobox has no draft year information"
@@ -146,6 +146,24 @@ def get_total_points(name: str) -> str:
     match = get_match(infobox_text, pattern, error_text)
 
     return match.group("total_points")
+
+def get_weight(name: str) -> str:
+     """Gets weight of the given NHL player
+
+    Args:
+        name - name of the person
+
+    Returns:
+        weight of the given NHL player
+    """
+    infobox_text = clean_text(get_first_infobox_text(get_page_html(name)))
+    pattern = r"(?:weight\D*)(?P<name>\d{4})"
+    error_text = (
+        "Page infobox has no weight information"
+    )
+    match = get_match(infobox_text, pattern, error_text)
+
+    return match.group("weight")
 
 # below are a set of actions. Each takes a list argument and returns a list of answers
 # according to the action and the argument. It is important that each function returns a
@@ -196,6 +214,17 @@ def total_points(matches: List[str]) -> List[str]:
         list of total points
     """
     return [get_total_points(matches[0])]
+
+def weight(matches: List[str]) -> List[str]:
+    """Returns the weight of a player in matches
+
+    Args:
+        matches - match from pattern of weights
+    
+    Returns:
+        list of weights
+    """
+    return [get_weight(matches[0])]
 
 
 
