@@ -111,6 +111,41 @@ def get_birth_date(name: str) -> str:
 
     return match.group("birth")
 
+def get_draft_pick(name: str) -> str:
+     """Gets pick number of the given person
+
+    Args:
+        name - name of the person
+
+    Returns:
+        pick number of the given person
+    """
+    infobox_text = clean_text(get_first_infobox_text(get_page_html(name)))
+    pattern = r"(?:NHL draft\D*)(?P<draft>\d{4})"
+    error_text = (
+        "Page infobox has no draft year information"
+    )
+    match = get_match(infobox_text, pattern, error_text)
+
+    return match.group("draft")
+
+def get_total_points(name: str) -> str:
+     """Gets total points of the given person
+
+    Args:
+        name - name of the person
+
+    Returns:
+        total points of the given person
+    """
+    infobox_text = clean_text(get_first_infobox_text(get_page_html(name)))
+    pattern = r"(?:NHL Total\D*)(?P<career>\d{4})"
+    error_text = (
+        "Page infobox has no total points information"
+    )
+    match = get_match(infobox_text, pattern, error_text)
+
+    return match.group("total_points")
 
 # below are a set of actions. Each takes a list argument and returns a list of answers
 # according to the action and the argument. It is important that each function returns a
@@ -139,6 +174,29 @@ def polar_radius(matches: List[str]) -> List[str]:
         polar radius of planet
     """
     return [get_polar_radius(matches[0])]
+
+def draft_pick(matches: List[str]) -> List[str]:
+    """Returns what pick a person was drafted in matches
+
+    Args:
+        matches - match from pattern of draft picks
+
+    Returns:
+        list of draft picks
+    """
+    return [get_draft_pick(matches[0])]
+
+def total_points(matches: List[str]) -> List[str]:
+    """Returns the total points a player scored in matches
+
+    Args:
+        matches - match from pattern of total points
+    
+    Returns:
+        list of total points
+    """
+    return [get_total_points(matches[0])]
+
 
 
 # dummy argument is ignored and doesn't matter
