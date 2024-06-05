@@ -1,6 +1,6 @@
 import re, string, calendar
-from wikipedia import WikipediaPage
 import wikipedia
+from wikipedia import WikipediaPage
 from bs4 import BeautifulSoup
 from nltk import word_tokenize, pos_tag, ne_chunk
 from nltk.tree import Tree
@@ -111,59 +111,65 @@ def get_birth_date(name: str) -> str:
 
     return match.group("birth")
 
-def get_draft_pick(name: str) -> str:
-     """Gets pick number of the given person
+def get_weight(name: str) -> str:
+    """Gets weight of the given person
+
 
     Args:
         name - name of the person
 
+
     Returns:
-        pick number of the given person
+        weight of the given person
     """
-    infobox_text = clean_text(get_first_infobox_text(get_page_html(name))
-    pattern = r"(?:NHL draft\D*)(?P<draft>\d{4})"
+    infobox_text = clean_text(get_first_infobox_text(get_page_html(name)))
+    pattern = r"(?:Weight\D*)(?P<weight>\d{3})"
     error_text = (
-        "Page infobox has no draft year information"
+        "Page infobox has no draft information"
     )
     match = get_match(infobox_text, pattern, error_text)
 
-    return match.group("draft")
+    return match.group("weight")
 
 def get_total_points(name: str) -> str:
-     """Gets total points of the given person
+    """Gets total points of the given person
+
 
     Args:
         name - name of the person
+
 
     Returns:
         total points of the given person
     """
     infobox_text = clean_text(get_first_infobox_text(get_page_html(name)))
-    pattern = r"(?:NHL Total\D*)(?P<career>\d{4})"
+    pattern = r"(?:NHL Totals\D*)(?P<NHL Totals>\d{4})"
     error_text = (
-        "Page infobox has no total points information"
+        "Page infobox has no NHL points information"
     )
     match = get_match(infobox_text, pattern, error_text)
 
     return match.group("total_points")
 
-def get_weight(name: str) -> str:
-     """Gets weight of the given NHL player
+def get_shoots(name: str) -> str:
+    """Gets shot side of the given NHL player
+
 
     Args:
         name - name of the person
 
+
     Returns:
-        weight of the given NHL player
+        shot side of the given NHL player
     """
     infobox_text = clean_text(get_first_infobox_text(get_page_html(name)))
-    pattern = r"(?:weight\D*)(?P<name>\d{4})"
+    pattern = r"(?:shoots\D*)(?P<shot>\'\D+')"
     error_text = (
-        "Page infobox has no weight information"
+        "Page infobox has no shot information"
     )
     match = get_match(infobox_text, pattern, error_text)
 
-    return match.group("weight")
+    return match.group("shoots")
 
 # below are a set of actions. Each takes a list argument and returns a list of answers
 # according to the action and the argument. It is important that each function returns a
@@ -193,11 +199,11 @@ def polar_radius(matches: List[str]) -> List[str]:
     """
     return [get_polar_radius(matches[0])]
 
-def draft_pick(matches: List[str]) -> List[str]:
-    """Returns what pick a person was drafted in matches
+def shoots(matches: List[str]) -> List[str]:
+    """Returns what side a player shoots from in matches
 
     Args:
-        matches - match from pattern of draft picks
+        matches - match from pattern of shooting sides
 
     Returns:
         list of draft picks
